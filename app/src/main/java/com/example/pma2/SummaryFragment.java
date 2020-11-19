@@ -92,7 +92,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, S
         inptPredavanja.setText(oSummary.getPred());
         inptLabos.setText(oSummary.getLab());
         inptPredmet.setText(oSummary.getSubject());
-        if (btmpImg != null)
+        if (oSummary.getProfile() != null)
         {
             inptImg.setImageBitmap(oSummary.getProfile());
         }

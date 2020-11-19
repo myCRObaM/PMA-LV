@@ -45,6 +45,7 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
 
         View view = inflater.inflate(R.layout.fragment_personal_info, container, false);
         setupViews(view);
+        setupButton();
 
         return view;
     }
@@ -56,6 +57,11 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
         inptPrezime = view.findViewById(R.id.txtPrezimeFragment);
         inptDatum = view.findViewById(R.id.txtDatumFragment);
         inptImage = view.findViewById(R.id.imgProfileViewFragment);
+    }
+
+    void setupButton()
+    {
+        btnNext.setOnClickListener(this::onClick);
 
         inptImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +69,6 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
                 dispatchTakePictureIntent();
             }
         });
-
-        btnNext.setOnClickListener(this::onClick);
     }
 
 
@@ -87,10 +91,16 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupButton();
+    }
 
     @Override
     public void onClick(View view) {
         iPersonalInfoInterface.didSetPersonalInfo(new Student(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(), btmpImg));
         btnNext.setOnClickListener(null);
+        inptImage.setOnClickListener(null);
     }
 }
