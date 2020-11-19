@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">pma2</string>
+    <string name="name_input_hint">Name</string>
+    <string name="surname_input_hint">Surname</string>
+    <string name="date_text_view">Date</string>
+    <string name="next_buttom_text">Next</string>
+    <string name="profesor_name_input_hint">Professor name</string>
+    <string name="profesor_surname_input_hint">Professor surname</string>
+    <string name="academic_year_text">Academic year:</string>
+    <string name="lecture_hours_text">Lecture hours:</string>
+    <string name="laboratory_hours_text">Laboratory hours:</string>
+    <string name="done_buttom_text">Done</string>
+    <string name="txtStudent" translatable="false">Student</string>
+    <string name="btn_add_new_student">Add new student</string>
+    <string name="subject_name_text">Subject name:</string>
+
+    <string-array name="lang_array">
+        <item>Engleski</item>
+        <item>Hrvatski</item>
+        <item>Mađarski</item>
+    </string-array>
+</resources>

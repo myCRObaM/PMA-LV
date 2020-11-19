@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pma2</string>
+    <string name="name_input_hint">Ime</string>
+    <string name="surname_input_hint">Prezime</string>
+    <string name="date_text_view">Datum</string>
+    <string name="next_buttom_text">Dalje</string>
+    <string name="profesor_name_input_hint">Ime profesora</string>
+    <string name="profesor_surname_input_hint">Prezime profesora</string>
+    <string name="academic_year_text">Akademska godina:</string>
+    <string name="lecture_hours_text">Sati predavanja:</string>
+    <string name="laboratory_hours_text">Sati labosa:</string>
+    <string name="done_buttom_text">Gotovo</string>
+    <string name="btn_add_new_student">Dodaj novog studenta</string>
+    <string name="subject_name_text">Ime predmeta:</string>
+</resources>
