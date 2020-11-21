@@ -5,10 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.widget.ImageView;
 
 import com.example.pma2.Adapters.CreateNewRecordAdapter;
 import com.example.pma2.Classes.Student;
@@ -19,13 +16,8 @@ import com.example.pma2.Enum.FragmentEnum;
 import com.example.pma2.Interfaces.ButtonPressedInterface;
 import com.example.pma2.Interfaces.DataReadyInterface;
 import com.example.pma2.Interfaces.GetDataInterface;
-import com.example.pma2.Interfaces.PersonalInfoInterface;
-import com.example.pma2.Interfaces.StudentInfoInterface;
-import com.example.pma2.Interfaces.SummaryScreenInterface;
 
 import java.util.ArrayList;
-
-import javax.security.auth.Subject;
 
 public class CreateNewRecordActivity extends AppCompatActivity implements GetDataInterface, ButtonPressedInterface {
 

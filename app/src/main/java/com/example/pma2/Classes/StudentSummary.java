@@ -2,8 +2,6 @@ package com.example.pma2.Classes;
 
 import android.graphics.Bitmap;
 
-import com.example.pma2.Interfaces.SummaryScreenInterface;
-
 public class StudentSummary {
     String name;
     String surname;

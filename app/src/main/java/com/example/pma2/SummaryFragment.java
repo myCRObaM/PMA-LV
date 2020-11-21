@@ -17,7 +17,6 @@ import com.example.pma2.Enum.FragmentEnum;
 import com.example.pma2.Interfaces.ButtonPressedInterface;
 import com.example.pma2.Interfaces.DataReadyInterface;
 import com.example.pma2.Interfaces.GetDataInterface;
-import com.example.pma2.Interfaces.SummaryScreenInterface;
 
 public class SummaryFragment extends Fragment implements View.OnClickListener, DataReadyInterface {
 
