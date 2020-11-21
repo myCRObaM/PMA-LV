@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.pma2.Enum.FragmentEnum;
+
 import java.util.ArrayList;
 
 public class CreateNewRecordAdapter extends FragmentStateAdapter {
@@ -31,6 +33,11 @@ public class CreateNewRecordAdapter extends FragmentStateAdapter {
     public void addFragments(ArrayList<Fragment> fragments)
     {
         this.fragmentList = fragments;
+    }
+
+    public FragmentEnum returnEnum()
+    {
+        return FragmentEnum.PersonalFragment;
     }
 
     @Override

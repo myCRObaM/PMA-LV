@@ -1,10 +1,15 @@
 package com.example.pma2;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +39,6 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, D
     EditText inptDatum;
     EditText inptPredmet;
     ImageView inptImg;
-    Bitmap btmpImg = null;
 
 
 
@@ -73,6 +77,12 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, D
     void setupButton()
     {
         btnDone.setOnClickListener(this::onClick);
+        inptImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
     }
 
     void setupData(StudentSummary oSummary)
@@ -91,23 +101,56 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, D
             inptImg.setImageBitmap(oSummary.getProfile());
         }
     }
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    public void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            inptImg.setImageBitmap(imageBitmap);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (getView() != null)
         {
+
             iGetDataInterface.viewReadyForData(FragmentEnum.SummaryFragment);
             setupButton();
         }
+    }
+
+    private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
     @Override
     public void onPause() {
         super.onPause();
         btnDone.setOnClickListener(null);
+        if (inptImg.getDrawable().getClass() == VectorDrawable.class)
+        {
+            inptImg.setImageBitmap(getBitmap((VectorDrawable) inptImg.getDrawable()));
+        }
         iGetDataInterface.viewReturningData(new StudentSummary(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(),
                 inptImeProfesora.getText().toString(), inptPrezimeProfesora.getText().toString(), inptPredmet.getText().toString(), inptLabos.getText().toString(),
-                inptPredavanja.getText().toString(), null, inptAkGodina.getText().toString()), FragmentEnum.SummaryFragment);
+                inptPredavanja.getText().toString(), ((BitmapDrawable) inptImg.getDrawable()).getBitmap(), inptAkGodina.getText().toString()), FragmentEnum.SummaryFragment);
     }
 
     @Override

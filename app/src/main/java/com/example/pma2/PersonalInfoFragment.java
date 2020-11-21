@@ -2,6 +2,9 @@ package com.example.pma2;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -116,7 +119,20 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
         super.onPause();
         btnNext.setOnClickListener(null);
         inptImage.setOnClickListener(null);
-        iGetDataInterface.viewReturningData(new Student(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(), btmpImg), FragmentEnum.PersonalFragment);
+        if (inptImage.getDrawable().getClass() == VectorDrawable.class)
+        {
+            inptImage.setImageBitmap(getBitmap((VectorDrawable) inptImage.getDrawable()));
+        }
+        iGetDataInterface.viewReturningData(new Student(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(), ((BitmapDrawable) inptImage.getDrawable()).getBitmap()), FragmentEnum.PersonalFragment);
+    }
+
+    private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
     @Override
