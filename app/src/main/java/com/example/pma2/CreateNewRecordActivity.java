@@ -1,6 +1,7 @@
 package com.example.pma2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -14,19 +15,27 @@ import com.example.pma2.Classes.Student;
 import com.example.pma2.Classes.StudentSummary;
 import com.example.pma2.Classes.StudentiSingleton;
 import com.example.pma2.Classes.SubjectClass;
+import com.example.pma2.Enum.FragmentEnum;
+import com.example.pma2.Interfaces.ButtonPressedInterface;
+import com.example.pma2.Interfaces.DataReadyInterface;
+import com.example.pma2.Interfaces.GetDataInterface;
 import com.example.pma2.Interfaces.PersonalInfoInterface;
 import com.example.pma2.Interfaces.StudentInfoInterface;
 import com.example.pma2.Interfaces.SummaryScreenInterface;
 
-public class CreateNewRecordActivity extends AppCompatActivity implements PersonalInfoInterface, StudentInfoInterface, SummaryScreenInterface {
+import java.util.ArrayList;
+
+import javax.security.auth.Subject;
+
+public class CreateNewRecordActivity extends AppCompatActivity implements GetDataInterface, ButtonPressedInterface {
 
     CreateNewRecordAdapter newRecordAdapter;
     private ViewPager2 viewPager;
-    private Student oStudent;
-    private SubjectClass oSubject;
-    private StudentSummary oSummary;
-    SummaryScreenInterface iSummaryScreenInterface;
-
+    private Student oStudent = new Student("","","",null);
+    private SubjectClass oSubject = new SubjectClass("", "","","","","");
+    private StudentSummary oSummary = new StudentSummary("","","","","","","","",null,"");
+    ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+    DataReadyInterface iDataReadyInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +50,22 @@ public class CreateNewRecordActivity extends AppCompatActivity implements Person
         newRecordAdapter = new CreateNewRecordAdapter(this);
 
         PersonalInfoFragment personalInfoFragment = new PersonalInfoFragment();
-        personalInfoFragment.iPersonalInfoInterface = this::didSetPersonalInfo;
+        personalInfoFragment.iGetDataInterface = this;
+        personalInfoFragment.iButtonPressedInterface = this;
 
         StudentInfoFragment studentInfoFragment = new StudentInfoFragment();
-        studentInfoFragment.iStudentInfoInterface = this::didSetStudentInfo;
+        studentInfoFragment.iGetDataInterface = this;
+        studentInfoFragment.iButtonPressedInterface = this;
 
         SummaryFragment summaryFragment = new SummaryFragment();
-        summaryFragment.iSummaryScreenInterface = this::didFinishSettingStudent;
-        this.iSummaryScreenInterface = summaryFragment;
+        summaryFragment.iGetDataInterface = this;
+        summaryFragment.iButtonPressedInterface = this;
 
-        newRecordAdapter.addFragment(personalInfoFragment);
-        newRecordAdapter.addFragment(studentInfoFragment);
-        newRecordAdapter.addFragment(summaryFragment);
+        fragments.add(personalInfoFragment);
+        fragments.add(studentInfoFragment);
+        fragments.add(summaryFragment);
+
+        newRecordAdapter.addFragments(fragments);
 
 
         viewPager = findViewById(R.id.viewPager);
@@ -75,8 +88,7 @@ public class CreateNewRecordActivity extends AppCompatActivity implements Person
     public void donePressed()
     {
         StudentiSingleton oStudentSingleton = StudentiSingleton.getInstance();
-        oStudentSingleton.AddStudent(new StudentSummary(oSummary.getName(), oSummary.getSurname(), oSummary.getDate(),
-                oSummary.getpName(), oSummary.getpSurname(), oSummary.getSubject(), oSummary.getLab(), oSummary.getPred(), oSummary.getProfile(), oSummary.getAkGodina()));
+        oStudentSingleton.AddStudent(oSummary);
 
 
         Intent intent = new Intent(CreateNewRecordActivity.this, ListScreen.class);
@@ -87,30 +99,59 @@ public class CreateNewRecordActivity extends AppCompatActivity implements Person
 
     private void setNextPage()
     {
-        if (viewPager.getCurrentItem() == 1)
-        {
-            iSummaryScreenInterface.didFinishSettingStudent(new StudentSummary(oStudent.getName(), oStudent.getSurname(), oStudent.getDate(),
-                    oSubject.getpName(), oSubject.getpSurname(), oSubject.getSubject(), oSubject.getLab(), oSubject.getPred(), oStudent.getBtmpProfile(), oSubject.getAkGodina()));
-        }
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-
     }
 
     @Override
-    public void didSetPersonalInfo(Student oStudent) {
-        this.oStudent = oStudent;
-        setNextPage();
+    public void viewReadyForData(FragmentEnum type) {
+            switch (type)
+            {
+                case PersonalFragment:
+                    iDataReadyInterface = (PersonalInfoFragment) fragments.get(0);
+                    iDataReadyInterface.pushData(oStudent);
+                    break;
+                case StudentFragment:
+                    iDataReadyInterface = (StudentInfoFragment) fragments.get(1);
+                    iDataReadyInterface.pushData(oSubject);
+                    break;
+                case SummaryFragment:
+                    oSummary = new StudentSummary(oStudent.getName(), oStudent.getSurname(), oStudent.getDate(),
+                            oSubject.getpName(), oSubject.getpSurname(), oSubject.getSubject(), oSubject.getLab(), oSubject.getPred(), oStudent.getBtmpProfile(), oSubject.getAkGodina());
+                    iDataReadyInterface = (SummaryFragment) fragments.get(2);
+                    iDataReadyInterface.pushData(oSummary);
+                    break;
+            }
     }
 
     @Override
-    public void didSetStudentInfo(SubjectClass oSubject) {
-        this.oSubject = oSubject;
-        setNextPage();
+    public void viewReturningData(Object object, FragmentEnum type) {
+        switch (type)
+        {
+            case PersonalFragment:
+                this.oStudent = (Student) object;
+                break;
+            case StudentFragment:
+                this.oSubject = (SubjectClass) object;
+                break;
+            case SummaryFragment:
+                StudentSummary temp = (StudentSummary) object;
+                this.oStudent = new Student(temp.getName(), temp.getSurname(), temp.getDate(), temp.getProfile());
+                this.oSubject = new SubjectClass(temp.getpName(), temp.getpSurname(), temp.getSubject(), temp.getPred(), temp.getLab(), temp.getAkGodina());
+                break;
+        }
     }
 
     @Override
-    public void didFinishSettingStudent(StudentSummary oStudent) {
-        this.oSummary = oStudent;
-        donePressed();
+    public void didPressButton(FragmentEnum type) {
+        switch (type)
+        {
+            case PersonalFragment:
+            case StudentFragment:
+                setNextPage();
+                break;
+            case SummaryFragment:
+                donePressed();
+                break;
+        }
     }
 }

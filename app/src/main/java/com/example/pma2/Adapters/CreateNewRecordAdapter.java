@@ -28,6 +28,11 @@ public class CreateNewRecordAdapter extends FragmentStateAdapter {
         fragmentList.add(fragment);
     }
 
+    public void addFragments(ArrayList<Fragment> fragments)
+    {
+        this.fragmentList = fragments;
+    }
+
     @Override
     public int getItemCount() {
         return fragmentList.size();

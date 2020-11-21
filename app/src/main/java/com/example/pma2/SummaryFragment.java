@@ -1,12 +1,9 @@
 package com.example.pma2;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +13,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.pma2.Classes.StudentSummary;
+import com.example.pma2.Enum.FragmentEnum;
+import com.example.pma2.Interfaces.ButtonPressedInterface;
+import com.example.pma2.Interfaces.DataReadyInterface;
+import com.example.pma2.Interfaces.GetDataInterface;
 import com.example.pma2.Interfaces.SummaryScreenInterface;
 
-public class SummaryFragment extends Fragment implements View.OnClickListener, SummaryScreenInterface {
+public class SummaryFragment extends Fragment implements View.OnClickListener, DataReadyInterface {
 
 
+    GetDataInterface iGetDataInterface;
+    ButtonPressedInterface iButtonPressedInterface;
     Button btnDone;
     EditText inptIme;
     EditText inptImeProfesora;
@@ -34,8 +37,6 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, S
     ImageView inptImg;
     Bitmap btmpImg = null;
 
-    StudentSummary oSummary;
-    SummaryScreenInterface iSummaryScreenInterface;
 
 
     @Override
@@ -50,15 +51,9 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, S
         View view = inflater.inflate(R.layout.fragment_summary, container, false);
 
         setupViews(view);
+        setupButton();
 
         return view;
-    }
-
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        setupButton();
     }
 
     void setupViews(View view)
@@ -81,7 +76,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, S
         btnDone.setOnClickListener(this::onClick);
     }
 
-    void setupView()
+    void setupData(StudentSummary oSummary)
     {
         inptIme.setText(oSummary.getName());
         inptPrezime.setText(oSummary.getSurname());
@@ -97,45 +92,32 @@ public class SummaryFragment extends Fragment implements View.OnClickListener, S
             inptImg.setImageBitmap(oSummary.getProfile());
         }
     }
-
-    void setupData()
-    {
-        oSummary.setName(inptIme.getText().toString());
-        oSummary.setSurname(inptPrezime.getText().toString());
-        oSummary.setDate(inptDatum.getText().toString());
-        oSummary.setpName(inptImeProfesora.getText().toString());
-        oSummary.setpSurname(inptPrezimeProfesora.getText().toString());
-        oSummary.setPred(inptPredavanja.getText().toString());
-        oSummary.setLab(inptLabos.getText().toString());
-        oSummary.setSubject(inptPredmet.getText().toString());
-        oSummary.setAkGodina(inptAkGodina.getText().toString());
-        if (btmpImg != null)
-        {
-            oSummary.setProfile(((BitmapDrawable) inptImg.getDrawable()).getBitmap());
-        }
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        if (oSummary == null)
+        if (getView() != null)
         {
-            oSummary = new StudentSummary("", "", "","","","","","",null, "");
+            iGetDataInterface.viewReadyForData(FragmentEnum.SummaryFragment);
+            setupButton();
         }
-        setupView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        btnDone.setOnClickListener(null);
+        iGetDataInterface.viewReturningData(new StudentSummary(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(),
+                inptImeProfesora.getText().toString(), inptPrezimeProfesora.getText().toString(), inptPredmet.getText().toString(), inptLabos.getText().toString(),
+                inptPredavanja.getText().toString(), null, inptAkGodina.getText().toString()), FragmentEnum.SummaryFragment);
     }
 
     @Override
     public void onClick(View view) {
-        setupData();
-        iSummaryScreenInterface.didFinishSettingStudent(oSummary);
-        btnDone.setOnClickListener(null);
+        iButtonPressedInterface.didPressButton(FragmentEnum.SummaryFragment);
     }
 
     @Override
-    public void didFinishSettingStudent(StudentSummary oStudent) {
-        this.oSummary = oStudent;
-        setupView();
+    public void pushData(Object object) {
+        setupData((StudentSummary) object);
     }
 }

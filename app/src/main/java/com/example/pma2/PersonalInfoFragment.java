@@ -17,21 +17,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.pma2.Classes.Student;
+import com.example.pma2.Enum.FragmentEnum;
+import com.example.pma2.Interfaces.ButtonPressedInterface;
+import com.example.pma2.Interfaces.DataReadyInterface;
+import com.example.pma2.Interfaces.GetDataInterface;
 import com.example.pma2.Interfaces.PersonalInfoInterface;
 
 
-public class PersonalInfoFragment extends Fragment implements View.OnClickListener {
+public class PersonalInfoFragment extends Fragment implements View.OnClickListener, DataReadyInterface {
 
-    PersonalInfoInterface iPersonalInfoInterface;
+    GetDataInterface iGetDataInterface;
+    ButtonPressedInterface iButtonPressedInterface;
     ImageView inptImage;
     Button btnNext;
     EditText inptIme;
     EditText inptPrezime;
     EditText inptDatum;
     Bitmap btmpImg = null;
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,16 +93,42 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    private void setupData(Student oStudent)
+    {
+        if (oStudent.getBtmpProfile() != null)
+        {
+            inptImage.setImageBitmap(oStudent.getBtmpProfile());
+        }
+        inptIme.setText(oStudent.getName());
+        inptPrezime.setText(oStudent.getSurname());
+        inptDatum.setText(oStudent.getDate());
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        setupButton();
+        if (getView() != null)
+        {
+            iGetDataInterface.viewReadyForData(FragmentEnum.PersonalFragment);
+            setupButton();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        btnNext.setOnClickListener(null);
+        inptImage.setOnClickListener(null);
+        iGetDataInterface.viewReturningData(new Student(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(), btmpImg), FragmentEnum.PersonalFragment);
     }
 
     @Override
     public void onClick(View view) {
-        iPersonalInfoInterface.didSetPersonalInfo(new Student(inptIme.getText().toString(), inptPrezime.getText().toString(), inptDatum.getText().toString(), btmpImg));
-        btnNext.setOnClickListener(null);
-        inptImage.setOnClickListener(null);
+        iButtonPressedInterface.didPressButton(FragmentEnum.PersonalFragment);
+    }
+
+    @Override
+    public void pushData(Object object) {
+        setupData((Student) object);
     }
 }
