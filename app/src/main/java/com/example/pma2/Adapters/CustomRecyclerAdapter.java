@@ -19,6 +19,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     ArrayList<StudentSummary> oStudenti;
 
 
+
     public CustomRecyclerAdapter(ArrayList<StudentSummary> oStudenti)
     {
         this.oStudenti = oStudenti;

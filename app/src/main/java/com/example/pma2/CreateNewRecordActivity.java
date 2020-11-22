@@ -26,7 +26,6 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
     private Student oStudent = new Student("","","",null);
     private SubjectClass oSubject = new SubjectClass("", "","","","","");
     private StudentSummary oSummary = new StudentSummary("","","","","","","","",null,"");
-    ArrayList<Fragment> fragments = new ArrayList<Fragment>();
     DataReadyInterface iDataReadyInterface;
 
     @Override
@@ -40,6 +39,7 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
     private void setupViewPager()
     {
         newRecordAdapter = new CreateNewRecordAdapter(this);
+        ArrayList<Fragment> fragments = new ArrayList<>();
 
         PersonalInfoFragment personalInfoFragment = new PersonalInfoFragment();
         personalInfoFragment.iGetDataInterface = this;
@@ -99,17 +99,17 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
             switch (type)
             {
                 case PersonalFragment:
-                    iDataReadyInterface = (PersonalInfoFragment) fragments.get(0);
+                    iDataReadyInterface = (PersonalInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type);
                     iDataReadyInterface.pushData(oStudent);
                     break;
                 case StudentFragment:
-                    iDataReadyInterface = (StudentInfoFragment) fragments.get(1);
+                    iDataReadyInterface = (StudentInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type);
                     iDataReadyInterface.pushData(oSubject);
                     break;
                 case SummaryFragment:
                     oSummary = new StudentSummary(oStudent.getName(), oStudent.getSurname(), oStudent.getDate(),
                             oSubject.getpName(), oSubject.getpSurname(), oSubject.getSubject(), oSubject.getLab(), oSubject.getPred(), oStudent.getBtmpProfile(), oSubject.getAkGodina());
-                    iDataReadyInterface = (SummaryFragment) fragments.get(2);
+                    iDataReadyInterface = (SummaryFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type);
                     iDataReadyInterface.pushData(oSummary);
                     break;
             }
