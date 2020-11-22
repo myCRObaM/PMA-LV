@@ -28,6 +28,7 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
     private SubjectClass oSubject = new SubjectClass("", "","","","","");
     private StudentSummary oSummary = new StudentSummary("","","","","","","","",null,"");
     DataReadyInterface iDataReadyInterface;
+    Boolean isStudentDataLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,10 +105,16 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
                     iDataReadyInterface.pushData(oStudent);
                     break;
                 case StudentFragment:
-                    iDataReadyInterface = (StudentInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type);
+                    StudentInfoFragment studentInfoFragment = (StudentInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type);
+                    iDataReadyInterface = studentInfoFragment;
                     iDataReadyInterface.pushData(oSubject);
-                    RetrofitRepository retrofitRepository = new RetrofitRepository((StudentInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type));
-                    retrofitRepository.getSubject();
+                    if (!isStudentDataLoaded)
+                    {
+                        RetrofitRepository retrofitRepository = new RetrofitRepository(studentInfoFragment, studentInfoFragment);
+                        retrofitRepository.getSubject();
+                        isStudentDataLoaded = true;
+                    }
+
                     break;
                 case SummaryFragment:
                     oSummary = new StudentSummary(oStudent.getName(), oStudent.getSurname(), oStudent.getDate(),

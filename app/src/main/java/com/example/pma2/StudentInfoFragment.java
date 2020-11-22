@@ -11,19 +11,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.pma2.Classes.SpinnerSubjectClass;
 import com.example.pma2.Classes.SubjectClass;
 import com.example.pma2.Enum.FragmentEnum;
 import com.example.pma2.Interfaces.ButtonPressedInterface;
 import com.example.pma2.Interfaces.DataReadyInterface;
+import com.example.pma2.Interfaces.GetDataError;
 import com.example.pma2.Interfaces.GetDataInterface;
 import com.example.pma2.Interfaces.SpinnerDataReady;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentInfoFragment extends Fragment implements View.OnClickListener, DataReadyInterface, SpinnerDataReady {
+public class StudentInfoFragment extends Fragment implements View.OnClickListener, DataReadyInterface, SpinnerDataReady, GetDataError {
 
     GetDataInterface iGetDataInterface;
     ButtonPressedInterface iButtonPressedInterface;
@@ -121,5 +123,10 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void teacherDataReady(List<SpinnerSubjectClass> teachers) {
 
+    }
+
+    @Override
+    public void errorPopUp(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
     }
 }

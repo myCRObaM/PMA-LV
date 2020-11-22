@@ -1,6 +1,7 @@
 package com.example.pma2.Repository;
 
 import com.example.pma2.Classes.SpinnerSubjectClass;
+import com.example.pma2.Interfaces.GetDataError;
 import com.example.pma2.Interfaces.SpinnerDataReady;
 import com.example.pma2.Model.SubjectModel;
 
@@ -15,6 +16,7 @@ import retrofit2.Retrofit;
 public class RetrofitRepository {
 
     SpinnerDataReady spinnerDataReady;
+    GetDataError getDataError;
 
 
     public void getSubject()
@@ -30,7 +32,7 @@ public class RetrofitRepository {
                 ArrayList<SpinnerSubjectClass> responseData = new ArrayList<>();
                 if (!response.isSuccessful())
                 {
-
+                    getDataError.errorPopUp(Integer.toString(response.code()));
                 }
                 else
                 {
@@ -46,11 +48,13 @@ public class RetrofitRepository {
 
             @Override
             public void onFailure(Call<List<SubjectModel>> call, Throwable t) {
+                getDataError.errorPopUp("Error: " + t.getMessage());
             }
         });
     }
 
-    public RetrofitRepository(SpinnerDataReady spinnerDataReady) {
+    public RetrofitRepository(SpinnerDataReady spinnerDataReady, GetDataError dataError) {
         this.spinnerDataReady = spinnerDataReady;
+        this.getDataError = dataError;
     }
 }
