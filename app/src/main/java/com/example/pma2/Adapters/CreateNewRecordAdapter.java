@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreateNewRecordAdapter extends FragmentStateAdapter {
-    public Map<FragmentEnum, Fragment> fragments = new EnumMap<FragmentEnum, Fragment>(FragmentEnum.class);
+    private Map<FragmentEnum, Fragment> fragments = new EnumMap<FragmentEnum, Fragment>(FragmentEnum.class);
 
     public CreateNewRecordAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);

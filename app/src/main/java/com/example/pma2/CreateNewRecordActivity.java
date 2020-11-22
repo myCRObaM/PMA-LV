@@ -16,6 +16,7 @@ import com.example.pma2.Enum.FragmentEnum;
 import com.example.pma2.Interfaces.ButtonPressedInterface;
 import com.example.pma2.Interfaces.DataReadyInterface;
 import com.example.pma2.Interfaces.GetDataInterface;
+import com.example.pma2.Repository.RetrofitRepository;
 
 import java.util.ArrayList;
 
@@ -105,6 +106,8 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
                 case StudentFragment:
                     iDataReadyInterface = (StudentInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type);
                     iDataReadyInterface.pushData(oSubject);
+                    RetrofitRepository retrofitRepository = new RetrofitRepository((StudentInfoFragment) ((CreateNewRecordAdapter) viewPager.getAdapter()).returnFragment(type));
+                    retrofitRepository.getSubject();
                     break;
                 case SummaryFragment:
                     oSummary = new StudentSummary(oStudent.getName(), oStudent.getSurname(), oStudent.getDate(),

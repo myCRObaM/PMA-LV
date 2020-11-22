@@ -13,15 +13,22 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
+import com.example.pma2.Classes.SpinnerSubjectClass;
 import com.example.pma2.Classes.Student;
 import com.example.pma2.Enum.FragmentEnum;
 import com.example.pma2.Interfaces.ButtonPressedInterface;
 import com.example.pma2.Interfaces.DataReadyInterface;
 import com.example.pma2.Interfaces.GetDataInterface;
+import com.example.pma2.Interfaces.SpinnerDataReady;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PersonalInfoFragment extends Fragment implements View.OnClickListener, DataReadyInterface {
@@ -144,4 +151,5 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
     public void pushData(Object object) {
         setupData((Student) object);
     }
+
 }

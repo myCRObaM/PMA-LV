@@ -7,16 +7,23 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.pma2.Classes.SpinnerSubjectClass;
 import com.example.pma2.Classes.SubjectClass;
 import com.example.pma2.Enum.FragmentEnum;
 import com.example.pma2.Interfaces.ButtonPressedInterface;
 import com.example.pma2.Interfaces.DataReadyInterface;
 import com.example.pma2.Interfaces.GetDataInterface;
+import com.example.pma2.Interfaces.SpinnerDataReady;
 
-public class StudentInfoFragment extends Fragment implements View.OnClickListener, DataReadyInterface {
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentInfoFragment extends Fragment implements View.OnClickListener, DataReadyInterface, SpinnerDataReady {
 
     GetDataInterface iGetDataInterface;
     ButtonPressedInterface iButtonPressedInterface;
@@ -27,6 +34,7 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     EditText inptLabos;
     EditText inptPredavanja;
     EditText inptImePredmeta;
+    Spinner subjectSpinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,7 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
         inptLabos = view.findViewById(R.id.inptSatiLabosaFragment);
         inptPredavanja = view.findViewById(R.id.inptSatiPredavanjaFragment);
         inptImePredmeta = view.findViewById(R.id.inptPredmetFragment);
+        subjectSpinner = view.findViewById(R.id.spinnerSubject);
     }
 
     void setupData(SubjectClass oSubject)
@@ -95,5 +104,22 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void pushData(Object object) {
         setupData((SubjectClass) object);
+    }
+
+    @Override
+    public void subjectDataReady(List<SpinnerSubjectClass> subjects) {
+        ArrayList<String> spinnerStrings = new ArrayList<>();
+        for (SpinnerSubjectClass subject: subjects)
+        {
+            spinnerStrings.add(subject.getName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerStrings);
+        subjectSpinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void teacherDataReady(List<SpinnerSubjectClass> teachers) {
+
     }
 }
