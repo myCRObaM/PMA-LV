@@ -89,6 +89,26 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
         });
     }
 
+    void setupTeacherSpinner(Integer i)
+    {
+        ArrayList<String> spinnerStrings = new ArrayList<>();
+        if (this.subjects.get(i).getTeachers().isEmpty())
+        {
+            spinnerStrings.add("-");
+        }
+        else
+        {
+            for (ProfesorClass teacher: this.subjects.get(i).getTeachers())
+            {
+                spinnerStrings.add(teacher.getName());
+            }
+        }
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerStrings);
+        teacherSpinner.setAdapter(adapter);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -107,10 +127,21 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
         String[] teacherName = new String[]{"", ""};
         if (teacherSpinner.getSelectedItem() != null)
         {
-            teacherName = teacherSpinner.getSelectedItem().toString().split(" ");
-        }
+            if (teacherSpinner.getSelectedItem().toString() != "-")
+            {
+                teacherName = teacherSpinner.getSelectedItem().toString().split(" ");
+            }
+            else
+            {
+                teacherName = new String[]{"-", "-"};
+            }
 
-        String subjectName = (String) subjectSpinner.getSelectedItem();
+        }
+        String subjectName = "";
+        if (subjectSpinner.getSelectedItem() != null)
+        {
+            subjectName = (String) subjectSpinner.getSelectedItem();
+        }
         iGetDataInterface.viewReturningData(new SubjectClass(teacherName[0], teacherName[1],
                 subjectName, inptPredavanja.getText().toString(), inptLabos.getText().toString(), inptAkGodina.getText().toString()), FragmentEnum.StudentFragment);
         btnNext.setOnClickListener(null);
@@ -119,18 +150,6 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         iButtonPressedInterface.didPressButton(FragmentEnum.StudentFragment);
-    }
-
-    void setupTeacherSpinner(Integer i)
-    {
-        ArrayList<String> spinnerStrings = new ArrayList<>();
-        for (ProfesorClass teacher: this.subjects.get(i).getTeachers())
-        {
-            spinnerStrings.add(teacher.getName());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerStrings);
-        teacherSpinner.setAdapter(adapter);
     }
 
     @Override
