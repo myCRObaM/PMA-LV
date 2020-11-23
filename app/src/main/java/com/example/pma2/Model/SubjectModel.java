@@ -2,22 +2,14 @@ package com.example.pma2.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class SubjectModel {
-    Integer id;
-    Integer userId;
-    String body;
     String title;
+    ArrayList<InstructorsModel> instructors;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public String getBody() {
-        return body;
+    public ArrayList<InstructorsModel> getInstructors() {
+        return instructors;
     }
 
     public String getTitle() {

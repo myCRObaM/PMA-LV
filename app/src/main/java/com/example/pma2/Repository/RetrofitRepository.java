@@ -1,8 +1,13 @@
 package com.example.pma2.Repository;
 
+import android.util.Log;
+
+import com.example.pma2.Classes.ProfesorClass;
 import com.example.pma2.Classes.SpinnerSubjectClass;
 import com.example.pma2.Interfaces.GetDataError;
 import com.example.pma2.Interfaces.SpinnerDataReady;
+import com.example.pma2.Model.InstructorsModel;
+import com.example.pma2.Model.SubjectApiModel;
 import com.example.pma2.Model.SubjectModel;
 
 import java.util.ArrayList;
@@ -25,30 +30,51 @@ public class RetrofitRepository {
         Retrofit retrofit = retrofitManager.getRetrofit();
 
         RetrofitGetDataInterface getInterface = retrofit.create(RetrofitGetDataInterface.class);
-        Call<List<SubjectModel>> call = getInterface.getSubjects();
-        call.enqueue(new Callback<List<SubjectModel>>() {
+        Call<SubjectApiModel> call = getInterface.getSubjects();
+        call.enqueue(new Callback<SubjectApiModel>() {
             @Override
-            public void onResponse(Call<List<SubjectModel>> call, Response<List<SubjectModel>> response) {
+            public void onResponse(Call<SubjectApiModel> call, Response<SubjectApiModel> response) {
                 ArrayList<SpinnerSubjectClass> responseData = new ArrayList<>();
+                ArrayList<ProfesorClass> profesorData = new ArrayList<>();
                 if (!response.isSuccessful())
                 {
                     getDataError.errorPopUp(Integer.toString(response.code()));
                 }
                 else
                 {
-                    List<SubjectModel> subjectResponse = response.body();
-
-                    for (SubjectModel subject: subjectResponse)
+                    SubjectApiModel subjectResponse = response.body();
+                    Integer profesorId = 0;
+                    Integer subjectId = 0;
+                    for (SubjectModel subject: subjectResponse.courses)
                     {
-                        responseData.add(new SpinnerSubjectClass(subject.getId(), subject.getTitle()));
+                        if (subject.getInstructors() != null)
+                        {
+                            for (InstructorsModel instructorsModel: subject.getInstructors())
+                            {
+                                if (instructorsModel.getName() != "")
+                                {
+                                    profesorData.add(new ProfesorClass(profesorId, instructorsModel.getName()));
+                                    profesorId = profesorId + 1;
+                                }
+                            }
+                        }
+
+                        if (subject.getTitle() != "" && !subject.getTitle().isEmpty())
+                        {
+                            responseData.add(new SpinnerSubjectClass(subjectId, subject.getTitle(), new ArrayList<ProfesorClass>(profesorData)));
+                            subjectId = subjectId + 1;
+                            profesorData.clear();
+                        }
+
                     }
                     spinnerDataReady.subjectDataReady(responseData);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<SubjectModel>> call, Throwable t) {
+            public void onFailure(Call<SubjectApiModel> call, Throwable t) {
                 getDataError.errorPopUp("Error: " + t.getMessage());
+                Log.e("HTTP ERROR",  t.getMessage());
             }
         });
     }

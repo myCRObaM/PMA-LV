@@ -7,12 +7,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.pma2.Classes.ProfesorClass;
 import com.example.pma2.Classes.SpinnerSubjectClass;
 import com.example.pma2.Classes.SubjectClass;
 import com.example.pma2.Enum.FragmentEnum;
@@ -22,6 +24,7 @@ import com.example.pma2.Interfaces.GetDataError;
 import com.example.pma2.Interfaces.GetDataInterface;
 import com.example.pma2.Interfaces.SpinnerDataReady;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +33,13 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     GetDataInterface iGetDataInterface;
     ButtonPressedInterface iButtonPressedInterface;
     Button btnNext;
-    EditText inptImeProfesora;
-    EditText inptPrezimeProfesora;
     EditText inptAkGodina;
     EditText inptLabos;
     EditText inptPredavanja;
-    EditText inptImePredmeta;
     Spinner subjectSpinner;
+    Spinner teacherSpinner;
+    ArrayList<SpinnerSubjectClass> subjects;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,20 +59,15 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     void setupViews(View view)
     {
         btnNext = view.findViewById(R.id.btnStudentDaljeFragment);
-        inptImeProfesora = view.findViewById(R.id.txtImeProfesoraFragment);
-        inptPrezimeProfesora = view.findViewById(R.id.txtPrezimeProfesoraFragment);
         inptAkGodina = view.findViewById(R.id.inptAkGodinaFragment);
         inptLabos = view.findViewById(R.id.inptSatiLabosaFragment);
         inptPredavanja = view.findViewById(R.id.inptSatiPredavanjaFragment);
-        inptImePredmeta = view.findViewById(R.id.inptPredmetFragment);
         subjectSpinner = view.findViewById(R.id.spinnerSubject);
+        teacherSpinner = view.findViewById(R.id.spinnerTeacher);
     }
 
     void setupData(SubjectClass oSubject)
     {
-        inptImeProfesora.setText(oSubject.getpName());
-        inptPrezimeProfesora.setText(oSubject.getpSurname());
-        inptImePredmeta.setText(oSubject.getSubject());
         inptAkGodina.setText(oSubject.getAkGodina());
         inptLabos.setText(oSubject.getLab());
         inptPredavanja.setText(oSubject.getPred());
@@ -78,6 +76,17 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     void setupButton()
     {
         btnNext.setOnClickListener(this::onClick);
+        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                setupTeacherSpinner(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -90,11 +99,15 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
         }
     }
 
+
+
     @Override
     public void onPause() {
         super.onPause();
-        iGetDataInterface.viewReturningData(new SubjectClass(inptImeProfesora.getText().toString(), inptPrezimeProfesora.getText().toString(),
-                inptImePredmeta.getText().toString(), inptPredavanja.getText().toString(), inptLabos.getText().toString(), inptAkGodina.getText().toString()), FragmentEnum.StudentFragment);
+        String[] teacherName = teacherSpinner.getSelectedItem().toString().split(" ");
+        String subjectName = (String) subjectSpinner.getSelectedItem();
+        iGetDataInterface.viewReturningData(new SubjectClass(teacherName[0], teacherName[1],
+                subjectName, inptPredavanja.getText().toString(), inptLabos.getText().toString(), inptAkGodina.getText().toString()), FragmentEnum.StudentFragment);
         btnNext.setOnClickListener(null);
     }
 
@@ -103,17 +116,30 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
         iButtonPressedInterface.didPressButton(FragmentEnum.StudentFragment);
     }
 
+    void setupTeacherSpinner(Integer i)
+    {
+        ArrayList<String> spinnerStrings = new ArrayList<>();
+        for (ProfesorClass teacher: this.subjects.get(i).getTeachers())
+        {
+            spinnerStrings.add(teacher.getName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerStrings);
+        teacherSpinner.setAdapter(adapter);
+    }
+
     @Override
     public void pushData(Object object) {
         setupData((SubjectClass) object);
     }
 
     @Override
-    public void subjectDataReady(List<SpinnerSubjectClass> subjects) {
+    public void subjectDataReady(ArrayList<SpinnerSubjectClass> subjects) {
+        this.subjects = subjects;
         ArrayList<String> spinnerStrings = new ArrayList<>();
         for (SpinnerSubjectClass subject: subjects)
         {
-            spinnerStrings.add(subject.getName());
+                spinnerStrings.add(subject.getTitle());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerStrings);
@@ -121,7 +147,7 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void teacherDataReady(List<SpinnerSubjectClass> teachers) {
+    public void teacherDataReady(List<ProfesorClass> teachers) {
 
     }
 

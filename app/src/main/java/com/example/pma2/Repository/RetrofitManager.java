@@ -33,8 +33,9 @@ public class RetrofitManager {
 
     public RetrofitManager() {
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .baseUrl("https://catalog-api.udacity.com/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(getLogger())
                 .build();
     }
 

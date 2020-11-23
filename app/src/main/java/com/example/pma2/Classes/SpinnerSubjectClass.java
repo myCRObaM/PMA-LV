@@ -1,19 +1,27 @@
 package com.example.pma2.Classes;
 
-public class SpinnerSubjectClass {
-    Integer id;
-    String name;
+import java.util.ArrayList;
 
-    public SpinnerSubjectClass(Integer id, String name) {
+public class SpinnerSubjectClass {
+    String title;
+    Integer id;
+    ArrayList<ProfesorClass> teachers;
+
+    public SpinnerSubjectClass(Integer id, String title, ArrayList<ProfesorClass> teachers) {
+        this.title = title;
         this.id = id;
-        this.name = name;
+        this.teachers = teachers;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
+    }
+
+    public ArrayList<ProfesorClass> getTeachers() {
+        return teachers;
     }
 }
