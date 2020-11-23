@@ -14,5 +14,6 @@
     <string name="done_buttom_text">Done</string>
     <string name="btn_add_new_student">Add new student</string>
     <string name="subject_name_text">Subject name:</string>
+    <string name="profesor_name_surname">Professor name and surname</string>
 
 </resources>

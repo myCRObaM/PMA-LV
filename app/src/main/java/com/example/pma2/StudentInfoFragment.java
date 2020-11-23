@@ -104,7 +104,12 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void onPause() {
         super.onPause();
-        String[] teacherName = teacherSpinner.getSelectedItem().toString().split(" ");
+        String[] teacherName = new String[]{"", ""};
+        if (teacherSpinner.getSelectedItem() != null)
+        {
+            teacherName = teacherSpinner.getSelectedItem().toString().split(" ");
+        }
+
         String subjectName = (String) subjectSpinner.getSelectedItem();
         iGetDataInterface.viewReturningData(new SubjectClass(teacherName[0], teacherName[1],
                 subjectName, inptPredavanja.getText().toString(), inptLabos.getText().toString(), inptAkGodina.getText().toString()), FragmentEnum.StudentFragment);
@@ -144,11 +149,6 @@ public class StudentInfoFragment extends Fragment implements View.OnClickListene
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerStrings);
         subjectSpinner.setAdapter(adapter);
-    }
-
-    @Override
-    public void teacherDataReady(List<ProfesorClass> teachers) {
-
     }
 
     @Override

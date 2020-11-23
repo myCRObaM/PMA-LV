@@ -13,6 +13,7 @@
     <string name="txtStudent" translatable="false">Student</string>
     <string name="btn_add_new_student">Add new student</string>
     <string name="subject_name_text">Subject name:</string>
+    <string name="profesor_name_surname">Professor name and surname</string>
 
     <string-array name="lang_array">
         <item>Engleski</item>

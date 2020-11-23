@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface SpinnerDataReady {
     void subjectDataReady(ArrayList<SpinnerSubjectClass> subjects);
-    void teacherDataReady(List<ProfesorClass> teachers);
 }

@@ -13,4 +13,5 @@
     <string name="done_buttom_text">Gotovo</string>
     <string name="btn_add_new_student">Dodaj novog studenta</string>
     <string name="subject_name_text">Ime predmeta:</string>
+    <string name="profesor_name_surname">Ime i prezime profesora</string>
 </resources>

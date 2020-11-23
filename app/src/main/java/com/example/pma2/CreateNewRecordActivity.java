@@ -94,6 +94,7 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
     private void setNextPage()
     {
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+        viewPager.setUserInputEnabled(false);
     }
 
     @Override
@@ -123,6 +124,7 @@ public class CreateNewRecordActivity extends AppCompatActivity implements GetDat
                     iDataReadyInterface.pushData(oSummary);
                     break;
             }
+        viewPager.setUserInputEnabled(true);
     }
 
     @Override
